@@ -1,0 +1,10 @@
+backports.ssl_match_hostname==3.5.0.1
+backports_abc==0.4
+certifi==2015.11.20.1
+tornado==4.4.2
+PyMySQL==0.7.11
+mysqlclient==1.3.10
+pytest==3.0.6
+pytest-asyncio==0.5.0
+flake8==3.0.0b2
+-e git://github.com/buzzfeed/Tornado-MySQL.git@0.5.3#egg=Tornado-MySQL
