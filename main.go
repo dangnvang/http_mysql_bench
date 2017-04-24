@@ -108,7 +108,7 @@ func main() {
 	defer db.Close()
 	db.SetMaxIdleConns(32)
 	numProcs := *numProcsPtr
-	returnedProcs := runtime.GOMAXPROCS(0)
+	returnedProcs := runtime.GOMAXPROCS(numProcs)
 	if numProcs == 0 {
 		numProcs = returnedProcs
 	}
