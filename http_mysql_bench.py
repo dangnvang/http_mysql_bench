@@ -63,7 +63,7 @@ class TornadoMySQLFullHandler(tornado.web.RequestHandler):
     @tornado.gen.coroutine
     def get(self, id):
         cur = yield TORNADO_MYSQL_POOL.execute(
-            'SELECT * FROM `buzz`, `sub_buzz` WHERE `buzz`.`id`=%s AND `sub_buzz`.`buzz_id`=%s', (id, id,))
+            'SELECT * FROM `buzz` INNER JOIN `sub_buzz` ON `buzz`.`id`=`sub_buzz`.`buzz_id` WHERE `buzz`.`id`=%s', (id,))
         cur.fetchall()
         self.write("Hello, tornado")
 
@@ -90,7 +90,7 @@ class PyMySQLFullHandler(tornado.web.RequestHandler):
     @tornado.gen.coroutine
     def get(self, id):
         with PYMYSQL_CONNECTION.cursor() as cursor:
-            cursor.execute('SELECT * FROM `buzz`, `sub_buzz` WHERE `buzz`.`id`=%s AND `sub_buzz`.`buzz_id`=%s', (id, id,))
+            cursor.execute('SELECT * FROM `buzz` INNER JOIN `sub_buzz` ON `buzz`.`id`=`sub_buzz`.`buzz_id` WHERE `buzz`.`id`=%s', (id,))
             cursor.fetchall()
         self.write("Hello, pymysql")
 
@@ -116,10 +116,9 @@ class MySQLClientParentHandler(tornado.web.RequestHandler):
 class MySQLClientFullHandler(tornado.web.RequestHandler):
     @tornado.gen.coroutine
     def get(self, id):
-        MYSQLCLIENT_DB.query('SELECT * FROM `buzz`, `sub_buzz` WHERE `buzz`.`id`=' + id + ' AND `sub_buzz`.`buzz_id`=' + id)
+        MYSQLCLIENT_DB.query('SELECT * FROM `buzz` INNER JOIN `sub_buzz` ON `buzz`.`id`=`sub_buzz`.`buzz_id` WHERE `buzz`.`id`=' + id)
         result = MYSQLCLIENT_DB.store_result()
-        # TODO - fetch all rows...
-        result.fetch_row()
+        result.fetch_row(maxrows=0)
         self.write("Hello, pymysql")
 
 
